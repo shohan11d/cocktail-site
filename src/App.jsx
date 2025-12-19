@@ -1,79 +1,106 @@
-/* import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import "./App.css";
-
-function App() {
-  const boxRef = useRef(null);
-
-  const tl =gsap.timeline({repeat: 2, repeatDelay: 2})
-  gsap.to("#box", {duration: 1, x: 100})
-  gsap.to("#box", {duration: 1, x: 200, delay: 1})
-  gsap.to("#box", {duration: 1, y: 100, opacity: 0})
-
-tl.resume();
-  return (
-    <div className="app">
-      <h1>GSAP Practice</h1>
-    <button className="btn" onClick={tl.resume()}>Play/Pause</button>
-      <div ref={boxRef} id="box" className="box">
-        Box
-      </div>
-      <div className="dot">
-        <div className="dot2"></div>
-      </div>
-    </div>
-  );
-}
-
-export default App; */
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
 import "./App.css";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 function App() {
   const boxRef = useRef(null);
-  const tl = useRef();
+  const textRef = useRef(null);
 
   useEffect(() => {
-    // Create the timeline and store it in the ref
-    tl.current = gsap.timeline({
-      repeat: -1,
-      repeatDelay: .5,
-      paused: true, // Start paused so we can control it with the button
+    // Box animation
+    gsap.fromTo(
+      boxRef.current,
+      { 
+        opacity: 0,
+        y: 100,
+        scale: 0.5
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: boxRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Text animation
+    gsap.to(textRef.current, {
+      text: "This text is animated with GSAP TextPlugin! Watch it type out smoothly. You can put any text here and it will animate beautifully.",
+      duration: 3,
+      delay: 0.5,
+      ease: "none",
+      scrollTrigger: {
+        trigger: textRef.current,
+        start: "top 70%"
+      }
     });
 
-    // Add animations to the timeline
-    tl.current
-      .to("#box", { duration: 1, x: 200, rotation: 360, borderRadius: "50%" })
-      .to("#box", { duration: 1, y: 200, scale: 2 })
-      .to("#box", { duration: 1, x: 300, opacity: 0 });
-
-    // Start the animation
-
-    // Cleanup function
     return () => {
-      tl.current.kill();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
-  const toggleAnimation = () => {
-    if (tl.current) {
-      tl.current.paused() ? tl.current.play() : tl.current.pause();
-    }
-  };
-
   return (
     <div className="app">
-      <h1>GSAP Practice</h1>
-      <button className="btn" onClick={toggleAnimation}>
-        Play/Pause
-      </button>
-      <div ref={boxRef} id="box" className="box">
-        Box
+      <div style={{ 
+        height: "100vh", 
+        display: "flex", 
+        flexDirection: "column",
+        alignItems: "center", 
+        justifyContent: "center",
+        background: "#f0f0f0",
+        padding: "20px",
+        textAlign: "center"
+      }}>
+        <h1>Scroll down to see the animations</h1>
       </div>
-      <div className="dot">
-        <div className="dot2"></div>
+      
+      <div 
+        ref={boxRef} 
+        className="box"
+        style={{
+          width: "150px",
+          height: "150px",
+          backgroundColor: "#4CAF50",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontSize: "18px",
+          margin: "100px auto",
+          borderRadius: "8px",
+          opacity: 0
+        }}
+      >
+        Animated Box
       </div>
+
+      <div 
+        ref={textRef}
+        style={{
+          maxWidth: "600px",
+          margin: "0 auto 100px",
+          padding: "20px",
+          fontSize: "24px",
+          lineHeight: "1.6",
+          opacity: 0.9
+        }}
+      >
+        {/* Text will be injected here by GSAP */}
+      </div>
+
+      <div style={{ height: "100vh" }}></div>
     </div>
   );
 }
