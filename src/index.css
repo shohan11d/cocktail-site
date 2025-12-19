@@ -66,3 +66,23 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.dot{
+  height: 10px;
+  width: 10px;
+  background-color:red;
+  border-radius: 100%;
+  position: relative;
+}
+.dot2{
+  background-color: green;
+  position: absolute;
+  left: 250px;
+ height: 10px;
+  width: 10px;
+  border-radius: 100%;
+}
+
+.btn {
+  
+
+}
