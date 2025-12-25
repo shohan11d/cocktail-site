@@ -3,7 +3,7 @@ import { navLinks } from "../../constants";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 function Navbar() {
   useGSAP(() => {
@@ -18,7 +18,7 @@ function Navbar() {
       { backgroundColor: "transparent" },
       {
         backgroundColor: "#000000050",
-        backgroundFilter: "blur(20px)",
+        backdropFilter: "blur(20px)",
         duration: 1,
         ease: "power3.out",
       }
